@@ -1,0 +1,4 @@
+# Project exclude paths
+/springcloud-client/target/
+/springcloud-server/target/
+/target/
