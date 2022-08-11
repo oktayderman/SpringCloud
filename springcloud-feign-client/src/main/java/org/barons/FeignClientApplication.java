@@ -34,4 +34,7 @@ public class FeignClientApplication {
         return "greeting-view";
     }
 
+    //TODO gateway ve euroka server(cluster oluyor alttaki config'leri acacagiz)  bitane mi olur ?
+    //eureka.client.register-with-eureka=false
+    //eureka.client.fetch-registry=false
 }

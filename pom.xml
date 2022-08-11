@@ -12,6 +12,7 @@
         <module>springcloud-client</module>
         <module>springcloud-server</module>
         <module>springcloud-feign-client</module>
+        <module>springcloud-gateway</module>
     </modules>
 
     <dependencyManagement>

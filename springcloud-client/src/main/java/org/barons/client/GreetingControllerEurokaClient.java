@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @SpringBootApplication
 @RestController
-public class EurekaClientApplication implements GreetingController {
+public class GreetingControllerEurokaClient implements GreetingController {
 
     @Autowired
     @Lazy
@@ -24,7 +24,7 @@ public class EurekaClientApplication implements GreetingController {
     private String appName;
 
     public static void main(String[] args) {
-        SpringApplication.run(EurekaClientApplication.class, args);
+        SpringApplication.run(GreetingControllerEurokaClient.class, args);
     }
 
     @Override
