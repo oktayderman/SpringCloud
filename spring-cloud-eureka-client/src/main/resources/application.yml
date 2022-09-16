@@ -1,8 +1,13 @@
+#https://developpaper.com/this-article-gives-you-the-reason-why-eureka-service-discovery-is-slow-and-deeply-analyzes-the-principle-of-eureka-client-service-discovery-and-eureka-server-service-elimination/
+#https://stackoverflow.com/questions/69674633/eureka-service-instance-is-stopped-in-docker-but-in-eureka-server-it-always-says
 spring.application.name: "eureka-client"
 eureka:
   instance:
     preferIpAddress: true
     initial-status: STARTING
+    lease-renewal-interval-in-seconds: 2
+    lease-expiration-duration-in-seconds: 5 #actually will be 10 bug of the netflix! check Lease.renew and isExpired
+
   client:
     healthcheck:
       enabled: true

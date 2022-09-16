@@ -4,6 +4,10 @@ server:
 eureka:
   server:
     enableSelfPreservation: false
+    expected-client-renewal-interval-seconds: 2
+    eviction-interval-timer-in-ms: 2000
+    registrySyncRetries: 3
+    registry-sync-retry-wait-ms: 5000
   client:
     registerWithEureka: true
     fetchRegistry: false

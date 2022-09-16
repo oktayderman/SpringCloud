@@ -1,0 +1,31 @@
+
+#    spring.cloud.consul.discovery.heartbeat.reregister-service-on-failure=true
+spring.application.name: "aom-client"
+spring:
+  cloud:
+    consul:
+      discovery:
+        heartbeat:
+          ttl: "30"
+          enabled: true
+          reregister-service-on-failure: true
+  config:
+    import: "optional:consul:"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "info,health"
+  endpoint:
+    health:
+      show-details: always
+
+
+server:
+  port: 8181
+
+
+logging:
+  level:
+    root: info

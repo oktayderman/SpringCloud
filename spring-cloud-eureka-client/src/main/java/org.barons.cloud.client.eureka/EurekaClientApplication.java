@@ -21,7 +21,7 @@ import java.util.List;
  */
 @SpringBootApplication
 public class EurekaClientApplication {
-
+	//http://localhost:8761/eureka/apps/appName to get details for the app from eureka server
 	static EurekaClientApplication	instance;
 	@Autowired
 	ApplicationInfoManager			appInfoManager;
@@ -29,33 +29,16 @@ public class EurekaClientApplication {
 	EurekaClientApplication() {
 		EurekaClientApplication.instance = this;
 	}
+	//todoProd hearthbeat gonderemiyorken(kill olurken veya suspend'de) euroka ne yapiyor 10sn icinde anlamali
 
 
 	public static void main(String[] args) {
 		SpringApplication.run(EurekaClientApplication.class, args);
 	}
 
-	public void setStatus() {
-		//todoProd hearthbeat gonderemiyorken(kill olurken veya suspend'de) euroka ne yapiyor 10sn icinde anlamali
-		/*Application application = eurekaClient.getApplication("aom-client");
-		if (application != null) {
-			List<InstanceInfo> instances = application.getInstances();
-			System.out.println("instanceCount:" + instances.size());
-			instances.forEach(System.out::println);
-		}*/
-	}
-
-	public static void sleep(int seconds) {
-		try {
-			Thread.sleep(seconds * 1000L);
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		}
-	}
 	//InstanceInfoReplicator.run ile degisen statü varsa yeni statü eureka server'a yollanir(instanceInfo)  --> instanceInfoReplicationIntervalSeconds
 	//DiscoveryClient -> statusChangeListener.notify ile server'a gider(appInfoManager.setStatus'ler bununla gider)
 	//DiscoveryClient.renew ile eurekaServer'a heartbeat'ler yollanir(30 sn de bir giden)(sadece statu gidiyor UP/DOWN vs)   --> leaseRenewalIntervalInSeconds
 	//Never send status by outOfService
 	//https://github.com/spring-cloud/spring-cloud-netflix/issues/3941
-	//Eureka servers never send keep-alive requests to their registered clients (as opposed to some Traffic Mangers), instead, Eureka clients send heartbeats to Eureka servers.
 }

@@ -24,8 +24,6 @@ public class ModuleHealthCheck implements HealthIndicator {
     //https://www.baeldung.com/spring-boot-actuators
 
     @Autowired
-    private DiscoveryClient discoveryClient;
-    @Autowired
     private ApplicationInfoManager applicationInfoManager;
     volatile Health health = Health.down().build();
 
@@ -62,6 +60,5 @@ public class ModuleHealthCheck implements HealthIndicator {
 }
 //when state is starting event we return starting here, it becomes "UP"! do not use healthcheck with eureka     healthcheck.enabled: false
 //one of EurekaHealthCheckHandler healthContributors saying we are UP and so status is being UP, customHandler may be used...
-//eureka.client.healthcheck.enabled=true when enabled, eureka server will get health info from clients, health statuses of the apps may be questioned from directly eureka server
 //and if status down here eureka server will see this
 
