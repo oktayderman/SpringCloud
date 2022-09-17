@@ -29,8 +29,3 @@ public class ConsulHealthCheck implements HealthIndicator {
 			return Health.up().build();
 		}
 	}
-	//when state is starting event we return starting here, it becomes "UP"! do not use healthcheck with eureka     healthcheck.enabled: false
-	//one of EurekaHealthCheckHandler healthContributors saying we are UP and so status is being UP, customHandler may be used...
-	//eureka.client.healthcheck.enabled=true when enabled, eureka server will get health info from clients and health statuses of the apps may be questioned from directly eureka server
-	//and if status down here eureka server will see this
-

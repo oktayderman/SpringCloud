@@ -90,6 +90,7 @@ public class MyTTLScheduler extends TtlScheduler {
             @Override
             public void run() {
                 try {
+                    //todo some of healthIndicators have to excluded!
                     CompositeHealth healthComponent = (CompositeHealth) this.ttlScheduler.healthEndpoint.health();
                     if(healthComponent.getStatus() == UP) {
                         this.ttlScheduler.client.agentCheckPass(this.checkId);
