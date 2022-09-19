@@ -1,0 +1,24 @@
+filebeat.autodiscover:
+  providers:
+    - type: docker
+      templates:
+        - condition:
+            contains:
+              docker.container.labels.collect_logs_with_filebeat: "true"
+            config:
+              - type: container
+                format: docker
+                paths:
+                  - /var/lib/docker/containers/${data.docker.container.id}/*.log
+                processors:
+                  - timestamp:
+                      field: json.timeMillis
+                      layouts:
+                        - UNIX_MS
+                        - UNIX
+                      test:
+                        - 1589117576765
+#output.elasticsearch:
+#  hosts: [ "elasticsearch:9200" ]
+output.console:
+  pretty: true

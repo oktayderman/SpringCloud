@@ -1,0 +1,44 @@
+version: '3'
+
+
+services:
+        aom:
+                image: aom
+                ports:
+                        - 8181:8181
+                depends_on:
+                        - kibana
+                labels:
+                        collect_logs_with_filebeat: "true"
+        filebeat:
+                #command: "-v -e -d autodiscover,docker"
+                environment:
+                        ES_JAVA_OPTS: -Xms512m -Xmx1G
+                image: oktay/filebeat
+
+                volumes:
+                        #docker /etc/docker/daemon.json -> data-root path/containers... stdout as json log file
+                        #format localHostDirectory:container path : read-only mount
+                        #- /myData/configuration/docker/data/containers:/var/lib/docker/containers:ro           # Docker logs
+                        #- /var/run/docker.sock:/var/run/docker.sock:ro                       # Additional information about containers
+                        - /myData/dev/opt/docker/data/containers:/var/lib/docker/containers:ro           # Docker logs
+                        - /var/run/docker.sock:/var/run/docker.sock:ro
+                user: root
+        elasticsearch:
+                image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
+                environment:
+                         xpack.security.enabled: "false"
+                         ES_JAVA_OPTS: -Xms512m -Xmx1G
+                         discovery.type: single-node
+
+                ports:
+                        - "9200:9200"
+                #http://localhost:9200/_cat/indices ,http://localhost:9200/_cluster/health
+        kibana:
+                image: docker.elastic.co/kibana/kibana:7.17.6
+                depends_on:
+                        - elasticsearch
+                ports:
+                        - "5601:5601"
+                environment:
+                        ES_JAVA_OPTS: -Xms512m -Xmx1G

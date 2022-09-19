@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO" monitorInterval="10" shutdownHook="disable">
+    <Properties>
+        <!-- GLOBAL PROPERTIES -->
+        <Property name="log-path">${sys:LOG_PATH}</Property>
+        <Property name="logFilePrefix">${log-path}/${sys:appName}-</Property>
+        <Property name="zipFilePrefix">${log-path}/%d{yyyy-MM}/${sys:appName}-</Property>
+        <Property name="zipFileSuffix">-%d{yyyy-MM-dd}-%i.log.gz</Property>
+    </Properties>
+
+    <!--
+
+    https://github.com/heckenmann/log4j-filebeat/blob/master/log4j2.properties
+    https://discuss.elastic.co/t/mdc-logs-elk-and-filebeat/222413/7
+    -->
+    <DynamicThresholdFilter key="ownerProcess"  onMatch="NEUTRAL" onMismatch="DENY" defaultThreshold="INFO">
+        <KeyValuePair key="KPIWriter" value="INFO"/> <!-- KPIWriter INFO threshold uygular-->
+    </DynamicThresholdFilter><!-- defaultThreshold keyValuePair'de olmayanlar icin default threshold-->
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <JSONLayout compact="true" eventEol="true" properties="true" stacktraceAsString="true" includeTimeMillis="true"/>
+        </Console>
+
+        <RollingFile name="APPFileLogger"
+                     fileName="${logFilePrefix}Main.json"
+                     filePattern="${zipFilePrefix}Main${zipFileSuffix}"
+                     append="true"
+                     immediateFlush="false">
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" maxRandomDelay="600"/>
+                <SizeBasedTriggeringPolicy size="300 MB"/>
+                <OnStartupTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="200">
+                <Delete basePath="${log-path}" maxDepth="2">
+                    <IfFileName glob="*/*.log.gz">
+                        <IfAny>
+                            <IfAccumulatedFileSize exceeds="10000 MB"/>
+                            <IfAccumulatedFileCount exceeds="20000"/>
+                        </IfAny>
+                    </IfFileName>
+                </Delete>
+            </DefaultRolloverStrategy>
+            <JSONLayout compact="true" eventEol="true" properties="true" stacktraceAsString="true" includeTimeMillis="true"/>
+        </RollingFile>
+        <RollingFile name="APPPerfLogger"
+                     fileName="${logFilePrefix}Perf.log"
+                     filePattern="${zipFilePrefix}Perf${zipFileSuffix}"
+                     append="true"
+                     immediateFlush="false">
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" maxRandomDelay="600"/>
+                <SizeBasedTriggeringPolicy size="300 MB"/>
+                <OnStartupTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="200"/>
+            <JSONLayout compact="true" eventEol="true" properties="true" stacktraceAsString="true" includeTimeMillis="true"/>
+        </RollingFile>
+        <RollingFile name="APPNetworkLogger"
+                     fileName="${logFilePrefix}Network.log"
+                     filePattern="${zipFilePrefix}Network${zipFileSuffix}"
+                     append="true"
+                     immediateFlush="false">
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" maxRandomDelay="600"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <OnStartupTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="200"/>
+
+            <JSONLayout compact="true" eventEol="true" properties="true" stacktraceAsString="true" includeTimeMillis="true"/>
+        </RollingFile>
+        <RollingFile name="APPAkkaLogger"
+                     fileName="${logFilePrefix}Akka.log"
+                     filePattern="${zipFilePrefix}Akka${zipFileSuffix}" append="true"
+                     immediateFlush="false">
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" maxRandomDelay="600"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <OnStartupTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="200"/>
+            <JSONLayout compact="true" eventEol="true" properties="true" stacktraceAsString="true" includeTimeMillis="true"/>
+        </RollingFile>
+        <RollingFile name="APPKafkaLogger"
+                     fileName="${logFilePrefix}Kafka.log"
+                     filePattern="${zipFilePrefix}Kafka${zipFileSuffix}"
+                     append="true"
+                     immediateFlush="false">
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" maxRandomDelay="600"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <OnStartupTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="200"/>
+            <JSONLayout compact="true" eventEol="true" properties="true" stacktraceAsString="true" includeTimeMillis="true"/>
+        </RollingFile>
+        <RollingFile name="APPErrorLogger"
+                     fileName="${logFilePrefix}Error.log"
+                     filePattern="${zipFilePrefix}Error${zipFileSuffix}"
+                     append="true"
+                     immediateFlush="false">
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" maxRandomDelay="600"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <OnStartupTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="200"/>
+            <JSONLayout compact="true" eventEol="true" properties="true" stacktraceAsString="true" includeTimeMillis="true"/>
+            <Filters>
+                <!-- This filter accepts warn, error, fatal and denies debug/trace -->
+                <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </RollingFile>
+        <RollingFile name="APPClusterLogger"
+                     fileName="${logFilePrefix}Cluster.log"
+                     filePattern="${zipFilePrefix}Cluster${zipFileSuffix}"
+                     append="true"
+                     immediateFlush="false">
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" maxRandomDelay="600"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <OnStartupTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="200"/>
+            <JSONLayout compact="true" eventEol="true" properties="true" stacktraceAsString="true" includeTimeMillis="true"/>
+        </RollingFile>
+        <RollingFile name="APPRouteLogger"
+                     fileName="${logFilePrefix}Route.log"
+                     filePattern="${zipFilePrefix}Route${zipFileSuffix}"
+                     append="true"
+                     immediateFlush="false">
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" maxRandomDelay="600"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <OnStartupTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="200"/>
+            <JSONLayout compact="true" eventEol="true" properties="true" stacktraceAsString="true" includeTimeMillis="true"/>
+        </RollingFile>
+        <RollingFile name="APPServerLogger"
+                     fileName="${logFilePrefix}Server.log"
+                     filePattern="${zipFilePrefix}Server${zipFileSuffix}"
+                     append="true"
+                     immediateFlush="false">
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" maxRandomDelay="600"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <OnStartupTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="200"/>
+            <JSONLayout compact="true" eventEol="true" properties="true" stacktraceAsString="true" includeTimeMillis="true"/>
+        </RollingFile>
+        <RollingFile name="APPStatsLogger"
+                     fileName="${logFilePrefix}Stats.log"
+                     filePattern="${zipFilePrefix}Stats${zipFileSuffix}"
+                     append="true"
+                     immediateFlush="false">
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" maxRandomDelay="600"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <OnStartupTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="200"/>
+            <JSONLayout compact="true" eventEol="true" properties="true" stacktraceAsString="true" includeTimeMillis="true"/>
+        </RollingFile>
+        <RollingFile name="APPDBLogger"
+                     fileName="${logFilePrefix}DB.log"
+                     filePattern="${zipFilePrefix}DB${zipFileSuffix}"
+                     append="true"
+                     immediateFlush="false">
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" maxRandomDelay="600"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <OnStartupTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="200"/>
+            <JSONLayout compact="true" eventEol="true" properties="true" stacktraceAsString="true" includeTimeMillis="true"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.i2i.iutility.utility" level="INFO" additivity="false">
+            <AppenderRef ref="APPFileLogger"/>
+        </Logger>
+        <Logger name="RouteLogger" level="INFO" additivity="false">
+            <AppenderRef ref="APPRouteLogger"/>
+        </Logger>
+        <Logger name="PerformanceLogger" level="INFO" additivity="false">
+            <AppenderRef ref="APPPerfLogger"/>
+            <AppenderRef ref="APPFileLogger" level="ERROR"/>
+            <AppenderRef ref="APPErrorLogger" level="WARN"/>
+        </Logger>
+        <Logger name="ServerLogger" level="INFO" additivity="false">
+            <AppenderRef ref="APPServerLogger"/>
+            <AppenderRef ref="APPFileLogger" level="ERROR"/>
+            <AppenderRef ref="APPErrorLogger" level="WARN"/>
+        </Logger>
+        <Logger name="StatsLogger" level="INFO" additivity="false">
+            <AppenderRef ref="APPStatsLogger"/>
+            <AppenderRef ref="APPFileLogger" level="WARN"/>
+            <AppenderRef ref="APPErrorLogger" level="WARN"/>
+        </Logger>
+        <Logger name="NetworkLogger" level="INFO" additivity="false">
+            <AppenderRef ref="APPNetworkLogger"/>
+            <AppenderRef ref="APPFileLogger" level="ERROR"/>
+            <AppenderRef ref="APPErrorLogger" level="WARN"/>
+        </Logger>
+        <Logger name="akka" level="WARN" additivity="false">
+            <AppenderRef ref="APPAkkaLogger"/>
+            <AppenderRef ref="APPFileLogger" level="ERROR"/>
+        </Logger>
+        <Logger name="akka.cluster" level="INFO" additivity="false">
+            <AppenderRef ref="APPAkkaLogger" level="INFO"/>
+            <AppenderRef ref="APPClusterLogger" level="INFO"/>
+            <AppenderRef ref="APPFileLogger" level="WARN"/>
+            <AppenderRef ref="APPErrorLogger"/>
+        </Logger>
+        <Logger name="com.i2i.fcbs.lib.akka.cluster" level="INFO" additivity="false">
+            <AppenderRef ref="APPAkkaLogger" level="INFO"/>
+            <AppenderRef ref="APPClusterLogger" level="INFO"/>
+            <AppenderRef ref="APPFileLogger" level="WARN"/>
+            <AppenderRef ref="APPErrorLogger"/>
+        </Logger>
+
+        <Logger name="oracle" level="INFO" additivity="false">
+            <AppenderRef ref="APPFileLogger"/>
+        </Logger>
+
+        <Logger name="com.zaxxer" level="DEBUG" additivity="false">
+            <AppenderRef ref="APPFileLogger" level="WARN"/>
+            <AppenderRef ref="APPDBLogger"/>
+        </Logger>
+
+        <Logger name="org.hibernate" level="WARN" additivity="false">
+            <AppenderRef ref="APPDBLogger"/>
+            <AppenderRef ref="APPFileLogger" level="ERROR"/>
+        </Logger>
+
+        <Logger name="org.hibernate" level="WARN" additivity="false">
+            <AppenderRef ref="APPDBLogger"/>
+            <AppenderRef ref="APPFileLogger" level="ERROR"/>
+        </Logger>
+
+        <Logger name="com.i2i.fcbs.lib.dbrepository" level="INFO" additivity="false">
+            <AppenderRef ref="APPDBLogger"/>
+            <AppenderRef ref="APPFileLogger" level="WARN"/>
+        </Logger>
+        <Logger name="org.apache.kafka" level="WARN" additivity="false">
+            <AppenderRef ref="APPKafkaLogger"/>
+            <AppenderRef ref="APPFileLogger" level="ERROR"/>
+            <AppenderRef ref="APPErrorLogger" level="ERROR"/>
+        </Logger>
+        <Logger name="com.i2i.fcbs.lib.connect.kafka" level="WARN" additivity="false">
+            <AppenderRef ref="APPKafkaLogger"/>
+            <AppenderRef ref="APPFileLogger" level="ERROR"/>
+            <AppenderRef ref="APPErrorLogger" level="WARN"/>
+        </Logger>
+        <!-- see what message sent to which topic by the module except kpi -->
+        <Logger name="com.i2i.fcbs.lib.connect.kafka.ocs.OCSKafkaPublisher" level="WARN" additivity="false">
+            <AppenderRef ref="APPKafkaLogger"/>
+            <AppenderRef ref="APPFileLogger" level="ERROR"/>
+            <AppenderRef ref="APPErrorLogger" level="WARN"/>
+        </Logger>
+        <Logger name="com.i2i.fcbs.lib.monitor.kpi" level="INFO" additivity="false">
+            <AppenderRef ref="APPPerfLogger" level="DEBUG"/>
+            <AppenderRef ref="APPFileLogger" level="WARN"/>
+            <AppenderRef ref="APPErrorLogger" level="WARN"/>
+        </Logger>
+        <Logger name="org.apache.tomcat" level="INFO" additivity="false">
+            <AppenderRef ref="APPServerLogger"/>
+            <AppenderRef ref="APPFileLogger" level="ERROR"/>
+            <AppenderRef ref="APPErrorLogger" level="WARN"/>
+        </Logger>
+        <Logger name="org.apache.catalina" level="INFO" additivity="false">
+            <AppenderRef ref="APPServerLogger"/>
+            <AppenderRef ref="APPFileLogger" level="ERROR"/>
+            <AppenderRef ref="APPErrorLogger" level="WARN"/>
+        </Logger>
+        <Logger name="org.apache.catalina.core.ContainerBase" level="INFO" additivity="false">
+            <AppenderRef ref="APPServerLogger"/>
+        </Logger>
+        <Logger name="org.apache.coyote" level="INFO" additivity="false">
+            <AppenderRef ref="APPServerLogger"/>
+            <AppenderRef ref="APPFileLogger" level="ERROR"/>
+            <AppenderRef ref="APPErrorLogger" level="WARN"/>
+        </Logger>
+        <Logger name="com.sun.xml.ws" level="INFO" additivity="false">
+            <AppenderRef ref="APPServerLogger"/>
+            <AppenderRef ref="APPFileLogger" level="ERROR"/>
+            <AppenderRef ref="APPErrorLogger" level="WARN"/>
+        </Logger>
+        <Logger name="javax.xml.soap" level="INFO" additivity="false">
+            <AppenderRef ref="APPServerLogger"/>
+            <AppenderRef ref="APPFileLogger" level="ERROR"/>
+            <AppenderRef ref="APPErrorLogger" level="WARN"/>
+        </Logger>
+        <Logger name="com.predic8" level="INFO" additivity="false">
+            <AppenderRef ref="APPServerLogger"/>
+            <AppenderRef ref="APPFileLogger" level="ERROR"/>
+            <AppenderRef ref="APPErrorLogger" level="WARN"/>
+        </Logger>
+        <Logger name="com.sun.xml.messaging" level="INFO" additivity="false">
+            <AppenderRef ref="APPServerLogger"/>
+            <AppenderRef ref="APPFileLogger" level="ERROR"/>
+            <AppenderRef ref="APPErrorLogger" level="WARN"/>
+        </Logger>
+        <Logger name="org.springframework.web.servlet.mvc" level="WARN" additivity="false">
+            <AppenderRef ref="APPServerLogger"/>
+            <AppenderRef ref="APPFileLogger" level="ERROR"/>
+            <AppenderRef ref="APPErrorLogger" level="ERROR"/>
+        </Logger>
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>

@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  filebeat:
+    environment:
+      ES_JAVA_OPTS: -Xms512m -Xmx1G
+    image: oktay/filebeat
+    #command: "--strict.perms=false -v -e -d autodiscover,docker"
+    user: root
+    volumes:
+      #docker /etc/docker/daemon.json -> data-root path/containers... stdout as json log file
+      #format localHostDirectory:container path : read-only mount
+      - /myData/configuration/docker/data/containers:/var/lib/docker/containers:ro           # Docker logs
+      - /var/run/docker.sock:/var/run/docker.sock:ro                       # Additional information about containers
+
+  test:
+    image: openjdk:11-jre-slim
+    command: "sh -c 'while true; do echo test; sleep 1; done'"
+    depends_on:
+      - filebeat
+    labels:
+      collect_logs_with_filebeat: "true"

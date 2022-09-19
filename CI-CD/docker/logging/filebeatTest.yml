@@ -1,0 +1,15 @@
+filebeat.autodiscover:
+  providers:
+    - type: docker
+      templates:
+        - condition:
+            contains:
+              docker.container.labels.collect_logs_with_filebeat: "true"
+          config:
+            - type: container
+              format: docker
+              paths:
+                - /var/lib/docker/containers/${data.docker.container.id}/*.log
+
+output.console:
+  pretty: true

@@ -1,0 +1,43 @@
+FROM openjdk:17-slim
+ARG SERVER
+ARG MODULE
+#BASH is set as default shell
+SHELL ["/bin/bash", "-c"]
+#ENV is available at image!
+ENV BARONS_ROOT="/"$SERVER
+ENV minMemory="256m"
+ENV maxMemory="1G"
+ENV MODULE=$MODULE
+
+RUN mkdir $BARONS_ROOT
+WORKDIR $BARONS_ROOT
+
+#https://towardsdatascience.com/fast-docker-builds-with-caching-for-python-533ddc3b0057
+#order is very important and should be less changing to most changing and big size to little
+#to use docker caching
+COPY $SERVER/thirdparty  lib/thirdparty
+COPY $SERVER/bin         bin
+COPY $SERVER/config      config
+COPY $SERVER/internal    lib/internal
+
+COPY profile.sh .
+RUN echo -e '. $BARONS_ROOT/profile.sh' >> /root/.bashrc
+
+#https://stackoverflow.com/questions/38024160/how-to-get-etc-profile-to-run-automatically-in-alpine-docker
+#https://www.baeldung.com/ops/dockerfile-env-variable
+EXPOSE 8080
+
+WORKDIR $BARONS_ROOT/bin/$MODULE
+
+#if BASH wasn't your default shell so
+#CMD /bin/bash -c "source /root/.bashrc && /workspace/launch.sh"
+CMD source /root/.bashrc && ./start.sh
+#ENTRYPOINT ["/bin/AOMIF/start_BARONS_aomif.sh"]
+
+#-rw-rw-r-- 1 root root  222 Aug 23 19:01 stop_BARONS_aomif.sh
+ #-rw-rw-r-- 1 root root 2568 Aug 23 19:01 start_BARONS_aomif.sh
+#WORKDIR Container folder'i... ve dockerFile ust folder'lara erisemiyoruz
+#docker build -f ../CI-CD/docker/DockerFile .
+#image'in icine bakmak icin: docker run --rm -it --entrypoint=/bin/bash aom
+#$ docker run --env-file .configProfile.sh ubuntu bash     --ip=ile docker network'unden ip verebiliyoruz
+#RUN freeze the state entryPoint every time starts

@@ -1,0 +1,44 @@
+---
+version: "3.5"
+#local system'de bu isimde klasorler olusturuyor
+volumes:
+  elasticsearch-volume:
+    driver: local
+  log-volume:
+    driver: local
+
+services:
+  log-producer:
+    image: log-producer
+    environment:
+      - LOG_PATH=log
+    volumes:
+      - log-volume:/opt/logger/log
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
+    hostname: elasticsearch
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=false
+    volumes:
+      - elasticsearch-volume:/usr/share/elasticsearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+  filebeat:
+    image: oktay/filebeat
+    environment:
+      - setup.kibana.host=kibana:5601
+      - LOG_PATH=/opt/logger/log
+    volumes:
+      -  log-volume:/opt/logger/log
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.6
+    ports:
+      - "5601:5601"
+    environment:
+      - "ELASTICSEARCH_HOSTS=http://elasticsearch:9200"

@@ -1,0 +1,1 @@
+docker build -t oktay/filebeat -f filebeat.DockerFile .
