@@ -16,28 +16,73 @@
         <module>springcloud-gateway</module>
         <module>spring-cloud-eureka-client</module>
         <module>springcloud-consul-client</module>
+        <module>spring-cloud-hello</module>
     </modules>
 
     <build>
         <plugins>
 
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <checkModificationExcludes>
+                        <checkModificationExclude>log\*</checkModificationExclude>
+                        <checkModificationExclude>*.iml</checkModificationExclude>
+                        <checkModificationExclude>*.txt</checkModificationExclude>
+                    </checkModificationExcludes>
+                </configuration>
+            </plugin>
+
+            <!--classpath-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.1.1</version>
                 <configuration>
                     <goal>package</goal>
-                    <outputDirectory>${internalFolder}</outputDirectory>
+                    <!-- being sure little module jar is not going to shipment internal folder-->
+                    <outputDirectory>${output.directory}</outputDirectory>
                     <archive>
                         <manifestEntries>
+                            <Implementation-Vendor>Copyright (c) 2019 i2i Systems - Istanbul, Turkey
+                            </Implementation-Vendor>
+                            <Implementation-Title>${project.artifactId}</Implementation-Title>
+                            <Implementation-Version>${revision}</Implementation-Version>
                             <Implementation-URL>http://www.i2i-systems.com</Implementation-URL>
                             <Built-By>${user.name}</Built-By>
                             <Build-Date>${maven.build.timestamp}</Build-Date>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <Class-Path>${ourClasspath}</Class-Path>
                         </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
-
+            <plugin><!--com.google.code.maven-replacer-plugin-->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <?m2e ignore?>
+                        <id>fix-classpath-for-manifest</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>regex-property</goal>
+                        </goals>
+                        <configuration>
+                            <name>ourClasspath</name>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <value>${commonJars}${path.separator}${thirdPartyJars}</value>
+                            <regex>;|\:</regex>
+                            <replacement xml:space="preserve"> </replacement>
+                            <failIfNoMatch>false</failIfNoMatch>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -52,7 +97,7 @@
                         </goals>
                         <configuration>
                             <excludeGroupIds>
-                                org.barons
+                                com.i2i.fcbs
                             </excludeGroupIds>
                             <includeScope>runtime</includeScope>
                             <useBaseVersion>true</useBaseVersion>
@@ -63,37 +108,44 @@
                     </execution>
                     <execution>
                         <?m2e ignore?>
+                        <id>build-thirdparty-classpath</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>build-classpath</goal>
+                        </goals>
+                        <configuration>
+                            <outputProperty>thirdPartyJars</outputProperty>
+                            <excludeGroupIds>
+                                com.i2i.fcbs
+                            </excludeGroupIds>
+                            <includeScope>runtime</includeScope>
+                            <useBaseVersion>true</useBaseVersion>
+                            <fileSeparator>/</fileSeparator>
+                            <prefix>./../../thirdparty</prefix>
+                            <attach>false</attach>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <!-- being sure module internal dependencies is not going shipment internal folder as they will be in the fat jar-->
+                        <?m2e ignore?>
                         <id>copy-internal</id>
                         <phase>package</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeGroupIds>
-                                org.barons
-                            </includeGroupIds>
+                            <includeGroupIds>ignoredInternalDependencies</includeGroupIds>
                             <useBaseVersion>true</useBaseVersion>
                             <overWriteSnapshots>true</overWriteSnapshots>
                             <overWriteIfNewer>true</overWriteIfNewer>
-                            <outputDirectory>${internalFolder}</outputDirectory>
+                            <outputDirectory>${output.directory}\ignoredInternalDependencies</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <checkModificationExcludes>
-                        <checkModificationExclude>log\*</checkModificationExclude>
-                        <checkModificationExclude>*.iml</checkModificationExclude>
-                        <checkModificationExclude>*.txt</checkModificationExclude>
-                    </checkModificationExcludes>
-                </configuration>
-            </plugin>
         </plugins>
+
+
     </build>
 
     <dependencies>
@@ -146,6 +198,8 @@
         <targetFolder>${project.path.folder}/${output.directory}/BARONS</targetFolder>
         <internalFolder>${targetFolder}/internal</internalFolder>
         <thirdPartyFolder>${targetFolder}/thirdparty</thirdPartyFolder>
+        <branchVersion>1.0-SNAPSHOT</branchVersion>
+        <revision>${branchVersion}</revision>
     </properties>
 
 </project>
