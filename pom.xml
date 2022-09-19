@@ -18,6 +18,84 @@
         <module>springcloud-consul-client</module>
     </modules>
 
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <goal>package</goal>
+                    <outputDirectory>${internalFolder}</outputDirectory>
+                    <archive>
+                        <manifestEntries>
+                            <Implementation-URL>http://www.i2i-systems.com</Implementation-URL>
+                            <Built-By>${user.name}</Built-By>
+                            <Build-Date>${maven.build.timestamp}</Build-Date>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <?m2e ignore?>
+                        <id>copy-thirdparty</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <excludeGroupIds>
+                                org.barons
+                            </excludeGroupIds>
+                            <includeScope>runtime</includeScope>
+                            <useBaseVersion>true</useBaseVersion>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                            <outputDirectory>${thirdPartyFolder}</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <?m2e ignore?>
+                        <id>copy-internal</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeGroupIds>
+                                org.barons
+                            </includeGroupIds>
+                            <useBaseVersion>true</useBaseVersion>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                            <outputDirectory>${internalFolder}</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <checkModificationExcludes>
+                        <checkModificationExclude>log\*</checkModificationExclude>
+                        <checkModificationExclude>*.iml</checkModificationExclude>
+                        <checkModificationExclude>*.txt</checkModificationExclude>
+                    </checkModificationExcludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -61,6 +139,13 @@
         <spring.version>5.3.22</spring.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <!--suppress UnresolvedMavenProperty -->
+        <outputFolder>${session.executionRootDirectory}</outputFolder>
+        <project.path.folder>${outputFolder}\</project.path.folder>
+        <output.directory>target</output.directory>
+        <targetFolder>${project.path.folder}/${output.directory}/BARONS</targetFolder>
+        <internalFolder>${targetFolder}/internal</internalFolder>
+        <thirdPartyFolder>${targetFolder}/thirdparty</thirdPartyFolder>
     </properties>
 
 </project>
