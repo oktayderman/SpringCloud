@@ -5,7 +5,7 @@ metadata:
 spec:
   #clusterIP: 10.11.241.93 servise verilen ip static ve servis omru boyunca degismez
   type: NodePort
-  #type: LoadBalancer
+  #type: LoadBalancer sadece gercek cloud'da anlamli bulundugu cloud'da bir load balancer olusturur,nodePort olursa hangisine gitcen vs sorusu var production'da bi de node dustu baska ip ile kalkti mesela
   # external load balancer is not aware of which nodes in the cluster are running Pods for its Service
   # external load balancer sadece bir node secip ona yonlendiriyor gerisini kubernate hallediyor
   # externalTrafficPolicy: Local  loadBalancer'in gonderdigi node'daki bir pod'a yonlendiriyoruz illaki, diger turlu baska node'daki pod'a da gidebilir
