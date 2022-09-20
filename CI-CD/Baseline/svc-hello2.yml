@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: hello2-service
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     app: hello2
   ports:
