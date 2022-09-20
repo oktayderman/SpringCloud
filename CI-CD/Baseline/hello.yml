@@ -26,11 +26,12 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            - name: MY_POD_IP
-              valueFrom:
-                fieldRef:
+            - name: MY_POD_IP #kubernate pod icin network namespace(NM) ve sanal network interface (VNI) olusturur olusturur(pod'un NM'i olur), bu NM, VNI ile node'un fiziksel network interface'i ile pod'u  bağlar
+              valueFrom:      #kubernate'in bu virtual network interface'e atadigi ip podIp oluyor
+                fieldRef:     #Pod icerisinde kosan container Pod'un network namespace'ini kullanir()
                   fieldPath: status.podIP
-
+                              #container cephesinden baktigimizda Pod bir fiziksel makinedir ve bir adet network interface'i vardir
+                              #podIp static degil degisebilir
             - name: SPRING_APPLICATION_NAME
               value: "hello"
             - name: SERVER_PORT
@@ -38,5 +39,6 @@ spec:
             - name: CLIENT_APP
               value: "hello2-service:8080"
           imagePullPolicy: Never
+          #imagePullSecrets: dockerhub-secret docker-hub'dan indirecekse(docker-secret kubernate secrets kısmında tanimlaniyor)
           ports:
-            - containerPort: 8080
+            - containerPort: 8080 #uygulamanin iceride kullandigi port

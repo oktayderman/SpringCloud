@@ -3,12 +3,53 @@ kind: Service
 metadata:
   name: hello-service
 spec:
+  #clusterIP: 10.11.241.93 servise verilen ip static ve servis omru boyunca degismez
   type: NodePort
+  #type: LoadBalancer
+  # external load balancer is not aware of which nodes in the cluster are running Pods for its Service
+  # external load balancer sadece bir node secip ona yonlendiriyor gerisini kubernate hallediyor
+  # externalTrafficPolicy: Local  loadBalancer'in gonderdigi node'daki bir pod'a yonlendiriyoruz illaki, diger turlu baska node'daki pod'a da gidebilir
+  # disaridan gelen trafik kube-proxy ile ilgili pod'a yonlendirir
   selector:
     app: hello
   ports:
     - name: http
       protocol: TCP
-      port: 8080
-      targetPort: 8080
-      nodePort: 30000 # 30000-32767, Optional field
+      port: 8080          #where clients reach the application, internal service port'u sanirim, client'larin geldigi clusterIP:port'dan gelen trafigi pod:targetPort'a yonlendir
+      targetPort: 8080    #where the application is actually listening for traffic
+      nodePort: 30000     # optional 30000-32767, nodeIp:30000 gelen trafigi clusterIP:port -> pod:targetPort'a yonlendir
+
+
+
+# node < zone < cluster
+
+
+
+#When a node routes traffic to a pod on another node, the source IP address of that traffic becomes that of the node, and not the client.
+#By setting ExternalTrafficPolicy=local, nodes only route traffic to pods that are on the same node, which then preserves client IP.
+#It’s important to recognize that ExternalTrafficPolicy is not a way to preserve source IP; it’s a change in networking policy that happens to preserve source IP.
+
+#How else can you preserve source IP with Kubernetes?
+#If your external load balancer is a Layer 7 load balancer, the X-Forwarded-For header will also propagate client IP
+
+#https://cloud.google.com/kubernetes-engine/docs/concepts/network-overview
+
+
+#multiple node service
+#kind: Service
+#apiVersion: v1
+#metadata:
+#  name: my-service
+#spec:
+#  selector:
+#    app: MyApp
+#  ports:
+#    - name: http
+#      nodePort: 30475
+#      port: 8080
+#    - name: metrics
+#      nodePort: 31261
+#      port: 5555
+#    - name: health
+#      nodePort: 30013
+#      port: 8443
