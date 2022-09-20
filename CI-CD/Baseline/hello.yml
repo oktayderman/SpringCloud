@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: hello-deployment
   labels:
-    app: hello
+    app: hello-service
 spec:
   selector:
     matchLabels:
@@ -18,9 +18,14 @@ spec:
           image: hello:local
           env:
             - name: SPRING_APPLICATION_NAME
-              value: "Hello"
+              value: "hello"
             - name: SERVER_PORT
               value: "8080"
+            - name: CLIENT_APP
+              value: "hello2-service:8080"
           imagePullPolicy: Never
           ports:
             - containerPort: 8080
+
+
+#kubectl exec podName -- printenv | grep SERVICE

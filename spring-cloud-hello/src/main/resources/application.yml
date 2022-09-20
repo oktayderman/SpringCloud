@@ -3,3 +3,5 @@ spring:
     name: hello
 server:
   port: 8080
+
+client.app : "localhost:8081"

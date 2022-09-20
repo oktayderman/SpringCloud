@@ -12,7 +12,3 @@ spec:
       port: 8080
       targetPort: 8080
       nodePort: 30000 # 30000-32767, Optional field
-
-#kubectl get pods -o wide --> IP:8080'den erisebilirsin
-#kubectl apply -f svc-hello.yml
-#kubectl get services --> localhost:30000'den erisebilirsin  localhost --> nodeIĞ

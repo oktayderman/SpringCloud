@@ -17,6 +17,10 @@ microk8s kubectl delete -f helloworld.yml
 echo "importing hello.tar"
 microk8s ctr image import hello.tar
 echo "applying helloworld.yml"
-microk8s kubectl apply  -f hello.yml
+microk8s kubectl apply  -f hello.yml #means create or update
 
+
+#kubectl get pods -o wide --> IP:8080'den erisebilirsin
+#kubectl apply -f svc-hello.yml
+#kubectl get services --> localhost:30000'den erisebilirsin  localhost --> nodeIĞ
 #kubectl logs pod-name

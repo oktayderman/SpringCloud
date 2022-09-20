@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox1
+  labels:
+    app: busybox1
+spec:
+  containers:
+    - image: busybox
+      command:
+        - sleep
+        - "3600"
+      imagePullPolicy: IfNotPresent
+      name: busybox
+  restartPolicy: Always
+
+
+#microk8s enable dashboard dns ingress
+#kubectl exec -it busybox1 -- wget -qO - http://10.152.183.19:8080/hello
+
+#kubectl get services kube-dns --namespace=kube-system
+#kubectl exec -it busybox1 -- wget -qO - http://hello-service:8080/hello

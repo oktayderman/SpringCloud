@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: hello2-deployment
   labels:
-    app: hello2
+    app: hello2-service
 spec:
   selector:
     matchLabels:
@@ -18,9 +18,11 @@ spec:
           image: hello:local
           env:
             - name: SPRING_APPLICATION_NAME
-              value: "Hello2"
+              value: "hello2"
             - name: SERVER_PORT
               value: "8080"
+            - name: CLIENT_APP
+              value: "hello-service:8080"
           imagePullPolicy: Never
           ports:
             - containerPort: 8080
