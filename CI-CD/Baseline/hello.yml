@@ -29,3 +29,8 @@ spec:
 
 
 #kubectl exec podName -- printenv | grep SERVICE
+
+     # - name: MY_POD_IP
+     #   valueFrom:
+     #     fieldRef:
+     #       fieldPath: status.podIP

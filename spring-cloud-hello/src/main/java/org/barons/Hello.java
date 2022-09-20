@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * User: Oktay CEKMEZ
@@ -41,7 +42,7 @@ public class Hello {
                     System.out.println("cannot get from:" +baseUrl + " exception:" + e.getClass().getSimpleName() + ":" + e.getMessage());
                 }finally {
                     try {
-                        Thread.sleep(5000);
+                        Thread.sleep(10000);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -58,8 +59,8 @@ public class Hello {
     }
 
     @RequestMapping("/hello")
-    public String hello() {
+    public String hello(HttpServletRequest request) {
         return String.format(
-                "Hello from '%s'!", appName);
+                "Hello from '%s' to remoteAddr:'%s', localAddr:'%s'", appName, request.getRemoteAddr(),request.getLocalAddr());
     }
 }
