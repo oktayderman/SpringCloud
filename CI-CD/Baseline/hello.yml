@@ -8,6 +8,7 @@ spec:
   selector:
     matchLabels:
       app: hello
+  replicas: 2
   template:
     metadata:
       labels:
@@ -17,6 +18,19 @@ spec:
         - name: hello
           image: hello:local
           env:
+            - name: MY_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: MY_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+
             - name: SPRING_APPLICATION_NAME
               value: "hello"
             - name: SERVER_PORT
@@ -26,13 +40,3 @@ spec:
           imagePullPolicy: Never
           ports:
             - containerPort: 8080
-
-
-#kubectl exec podName -- printenv | grep SERVICE
-
-     # - name: MY_POD_IP
-     #   valueFrom:
-     #     fieldRef:
-     #       fieldPath: status.podIP
-
-      #https://stackoverflow.com/questions/30746888/how-to-know-a-pods-own-ip-address-from-inside-a-container-in-the-pod

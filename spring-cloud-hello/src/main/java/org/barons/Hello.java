@@ -42,7 +42,7 @@ public class Hello {
                     System.out.println("cannot get from:" +baseUrl + " exception:" + e.getClass().getSimpleName() + ":" + e.getMessage());
                 }finally {
                     try {
-                        Thread.sleep(10000);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -54,13 +54,12 @@ public class Hello {
 
     public static void main(String[] args) {
         SpringApplication.run(Hello.class, args);
-
-
     }
 
     @RequestMapping("/hello")
     public String hello(HttpServletRequest request) {
         return String.format(
-                "Hello from '%s' to remoteAddr:'%s', localAddr:'%s'", appName, request.getRemoteAddr(),request.getLocalAddr());
+                "Hello from '%s' to clientIP:'%s', serverIP:'%s', ", appName, request.getRemoteAddr(),request.getLocalAddr());
+        //serverPodIP:'%s' System.getenv("MY_POD_IP")
     }
 }

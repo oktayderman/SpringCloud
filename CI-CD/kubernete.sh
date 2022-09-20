@@ -12,15 +12,38 @@ docker build -t hello:local --build-arg SERVER=$server --build-arg MODULE=HELLO 
 
 echo "saving hello.tar"
 docker save hello:local > hello.tar
-echo "deleting helloworld.yml"
-microk8s kubectl delete -f helloworld.yml
+echo "deleting hello.yml"
+microk8s kubectl delete -f hello.yml
+microk8s kubectl delete -f hello2.yml
 echo "importing hello.tar"
 microk8s ctr image import hello.tar
 echo "applying helloworld.yml"
 microk8s kubectl apply  -f hello.yml #means create or update
+microk8s kubectl apply  -f hello2.yml #means create or update
 
 
-#kubectl get pods -o wide --> IP:8080'den erisebilirsin
+
+
 #kubectl apply -f svc-hello.yml
-#kubectl get services --> localhost:30000'den erisebilirsin  localhost --> nodeIĞ
+
+
+
+
+# KUB GET #
+
+#kubectl get pods -o wide      --> IP:8080'den erisebilirsin
+#kubectl get services -o wide  --> localhost:30000'den erisebilirsin  localhost --> nodeIp
+
+#KUB INFO #
+
+#kubctl get nodes -o wide
+#kubctl get namespace
+#kubctl get pods n i2i-api o wide (i2i-api name space’indekini getir)
+#kubctl get deployments -n i2i-api -> kaç pod konfigure edilmiş görebilirin
+
+### POD INFO ###
+#kubectl exec podName -- printenv
+#pod'a girip env cagirirsan tum environment'lari gorebilirsin
+#kubectl describe pod pod-name
+
 #kubectl logs pod-name
