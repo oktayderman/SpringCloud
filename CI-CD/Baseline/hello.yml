@@ -34,3 +34,5 @@ spec:
      #   valueFrom:
      #     fieldRef:
      #       fieldPath: status.podIP
+
+      #https://stackoverflow.com/questions/30746888/how-to-know-a-pods-own-ip-address-from-inside-a-container-in-the-pod
