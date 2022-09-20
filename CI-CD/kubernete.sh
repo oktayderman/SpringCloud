@@ -40,10 +40,13 @@ microk8s kubectl apply  -f hello2.yml #means create or update
 #kubctl get namespace
 #kubctl get pods n i2i-api o wide (i2i-api name space’indekini getir)
 #kubctl get deployments -n i2i-api -> kaç pod konfigure edilmiş görebilirin
-
+#kubectl get endpoints cache -o yaml veya json (get all podIps)
 ### POD INFO ###
 #kubectl exec podName -- printenv
 #pod'a girip env cagirirsan tum environment'lari gorebilirsin
 #kubectl describe pod pod-name
 
 #kubectl logs pod-name
+
+#tum pod'lari almak icin
+#https://kubernetes.io/docs/tasks/run-application/access-api-from-pod/
