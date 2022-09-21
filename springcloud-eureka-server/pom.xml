@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>springcloud-server</artifactId>
+    <artifactId>springcloud-eureka-server</artifactId>
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -24,9 +24,18 @@
                     <artifactId>jersey-core</artifactId>
                 </exclusion>
                 <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-server</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-servlet</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>com.sun.jersey.contribs</groupId>
                     <artifactId>jersey-apache-client4</artifactId>
                 </exclusion>
+
             </exclusions>
         </dependency>
     </dependencies>
