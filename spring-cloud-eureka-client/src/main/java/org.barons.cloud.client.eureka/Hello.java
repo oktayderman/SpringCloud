@@ -14,11 +14,13 @@ public class Hello {
     RestTemplate restTemplate;
     @Value("${spring.application.name}")
     private String appName;
+    @Value("${server.port}")
+    private int port;
 
     @RequestMapping("/hello")
     public String hello(HttpServletRequest request) {
         return String.format(
-                "Hello from '%s' to clientIP:'%s', serverIP:'%s', ", appName, request.getRemoteAddr(),request.getLocalAddr());
+                "Hello from '%s' to clientIP:'%s', server:'%s':'%s', ", appName, request.getRemoteAddr(),request.getLocalAddr(),port);
         //serverPodIP:'%s' System.getenv("MY_POD_IP")
     }
 }
