@@ -50,3 +50,5 @@ microk8s kubectl apply  -f hello2.yml #means create or update
 
 #tum pod'lari almak icin
 #https://kubernetes.io/docs/tasks/run-application/access-api-from-pod/
+#headless-service
+# health check icin liveness probe, readiness probe
