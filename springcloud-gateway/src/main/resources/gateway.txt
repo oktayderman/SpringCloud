@@ -1,0 +1,24 @@
+loadBalancer -> Gateway(multiple)
+
+Gateway olmazsa çağırıcışar eureka ile entegre olmalı
+Gateway ->  service instances, alice * n  - bob * n
+|           |
+eurekaServers
+
+
+loadBalancer -> kubernate nodes -> pods
+
+bob-service(private dbs)  -> bob-pods
+
+alice-service  -> alice-pods
+
+
+Eureka tabanlı çalışan bi sisteme kubernate entegre etmek için adamlar şöyle yapmış
+
+#Eurek8s implements a simple control loop that propagates the state of each microservice to entries in Eureka.
+Kubernate nod'larini eureka'ya register ediyor galiba
+
+#eureka'ya kubernate onundeki loadBalancer'in ip siini de verebilirsin tum farkli servisler icin, loadbalancer ip'si değişirse ama
+her pod'a bildirmek gerekecek bunu
+
+https://srvaroa.github.io/kubernetes/eureka/paas/microservices/loadbalancing/2020/02/12/eureka-kubernetes.html
