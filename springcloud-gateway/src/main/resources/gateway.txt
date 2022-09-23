@@ -22,3 +22,40 @@ Kubernate nod'larini eureka'ya register ediyor galiba
 her pod'a bildirmek gerekecek bunu
 
 https://srvaroa.github.io/kubernetes/eureka/paas/microservices/loadbalancing/2020/02/12/eureka-kubernetes.html
+
+
+ingress controller(nginx open source) bu da bi pod oluyor replica count'u en az 2 vermek lazım
+kubectl get pods –namespace=ingress-nginx
+
+
+Amazon ELB service tipi loadbalancer olan service'e direk routing yapabiliyor ama sadece birine yapar
+
+
+Nginx ingress contreller will create a rule to route http://kubernetes.foo.bar/app to point to the service appsvc in your cluster.
+
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+   ingress.kubernetes.io/rewrite-target: /
+ name: web-ingress
+spec:
+  rules:
+  - host: kubernetes.foo.bar
+    http:
+      paths:
+      - backend:
+          serviceName: appsvc
+          servicePort: 80
+        path: /app
+
+
+
+An Ingress Controller is:
+
+A service of type Load Balancer backed by a deployment of pods running in your cluster.
+Each pod does 2 things:
+Acts as a Layer 7 Load Balancer running inside your cluster. (Comes in many flavors Nginx is popular)
+Dynamically configures itself based on Ingress Objects in your cluster
+(Ingress Objects can be thought of as declarative configuration snippits of a Layer 7 Load Balancer.)
