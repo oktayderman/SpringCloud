@@ -1,6 +1,6 @@
 loadBalancer -> Gateway(multiple)
 
-Gateway olmazsa çağırıcışar eureka ile entegre olmalı
+Gateway olmazsa çağırıcılar eureka ile entegre olmalı
 Gateway ->  service instances, alice * n  - bob * n
 |           |
 eurekaServers
@@ -22,7 +22,7 @@ Kubernate nod'larini eureka'ya register ediyor galiba
 her pod'a bildirmek gerekecek bunu
 
 https://srvaroa.github.io/kubernetes/eureka/paas/microservices/loadbalancing/2020/02/12/eureka-kubernetes.html
-
+https://traefik.io/blog/combining-ingress-controllers-and-external-load-balancers-with-kubernetes/
 
 ingress controller(nginx open source) bu da bi pod oluyor replica count'u en az 2 vermek lazım
 kubectl get pods –namespace=ingress-nginx
