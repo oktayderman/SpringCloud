@@ -63,7 +63,9 @@ public class Hello {
 
     @RequestMapping("/books")
     public List<Book> books() {
-        return bookService.list();
+        List<Book> list = bookService.list();
+        list.get(0).setId((long) Integer.MAX_VALUE);
+        return list;
     }
 
     @RequestMapping("/hello")
