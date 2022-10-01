@@ -1,6 +1,7 @@
 package org.barons;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,6 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * User: Oktay CEKMEZ
@@ -28,6 +30,9 @@ public class Hello {
     @Value("${client.app}")
     private String clientApp;
     private String baseUrl;
+
+    @Autowired
+    BookService bookService;
 
     @PostConstruct
     void initialize() {
@@ -54,6 +59,11 @@ public class Hello {
 
     public static void main(String[] args) {
         SpringApplication.run(Hello.class, args);
+    }
+
+    @RequestMapping("/books")
+    public List<Book> books() {
+        return bookService.list();
     }
 
     @RequestMapping("/hello")
