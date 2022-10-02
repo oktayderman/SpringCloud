@@ -31,8 +31,7 @@ public class Hello {
     private String clientApp;
     private String baseUrl;
 
-    @Autowired
-    BookService bookService;
+
 
     @PostConstruct
     void initialize() {
@@ -61,12 +60,7 @@ public class Hello {
         SpringApplication.run(Hello.class, args);
     }
 
-    @RequestMapping("/books")
-    public List<Book> books() {
-        List<Book> list = bookService.list();
-        list.get(0).setId((long) Integer.MAX_VALUE);
-        return list;
-    }
+
 
     @RequestMapping("/hello")
     public String hello(HttpServletRequest request) {
