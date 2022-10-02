@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 
 @Component
-@EnableAsync
 public class AnnotationDrivenEventListener {
     @PostConstruct
     void init() {

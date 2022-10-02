@@ -1,17 +1,16 @@
 package org.barons;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * User: Oktay CEKMEZ
@@ -20,6 +19,7 @@ import java.util.List;
  */
 @SpringBootApplication
 @RestController
+@EnableAsync
 public class Hello {
     private boolean closed = false;
     WebClient webClient;
