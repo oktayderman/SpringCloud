@@ -3,6 +3,7 @@ package org.barons;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
@@ -16,8 +17,9 @@ public class AnnotationDrivenEventListener {
         System.out.println("inited");
     }
 
-    @Async
-    @EventListener //synch to make it asynch mark as asynch
+    @Async//without that publisher thread will call this method synch
+    @EventListener
+    @Order(1)//sets order to call amoung ContextRefreshedEvent listeners
     public void handleContextStart(ContextRefreshedEvent cse) {
         System.out.println("started");
     }
