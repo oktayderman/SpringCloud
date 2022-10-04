@@ -62,6 +62,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .setHeader(PAYMENT_ID_HEADER, paymentId)
                 .build();
         //https://www.baeldung.com/reactor-core
+        //https://www.cognizantsoftvision.com/blog/getting-started-with-reactive-spring-spring-webflux/
         //synch sendevent deprecated
         //Mono veya flux publisher, stream oluyor ama akka daki gibi subscribe olmadan materialize olmadan hicbirsey baslamiyor
         Flux event_handling_complete = sm.sendEvent(Mono.just(msg))
