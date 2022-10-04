@@ -9,6 +9,7 @@ import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.support.DefaultStateMachineContext;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import javax.transaction.Transactional;
 
@@ -59,8 +60,11 @@ public class PaymentServiceImpl implements PaymentService {
         Message msg = MessageBuilder.withPayload(event)
                 .setHeader(PAYMENT_ID_HEADER, paymentId)
                 .build();
-
-        sm.sendEvent(msg);
+        //synch sendevent deprecated
+        sm.sendEvent(Mono.just(msg))
+                .doOnComplete(() -> {
+                    System.out.println("Event handling complete");
+                }).subscribe();
     }
 
     private StateMachine<PaymentState, PaymentEvent> build(Long paymentId){
