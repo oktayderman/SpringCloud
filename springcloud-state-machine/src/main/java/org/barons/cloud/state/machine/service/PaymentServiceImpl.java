@@ -9,6 +9,7 @@ import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.support.DefaultStateMachineContext;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.transaction.Transactional;
@@ -60,11 +61,14 @@ public class PaymentServiceImpl implements PaymentService {
         Message msg = MessageBuilder.withPayload(event)
                 .setHeader(PAYMENT_ID_HEADER, paymentId)
                 .build();
+        //https://www.baeldung.com/reactor-core
         //synch sendevent deprecated
-        sm.sendEvent(Mono.just(msg))
+        //Mono veya flux publisher, stream oluyor ama akka daki gibi subscribe olmadan materialize olmadan hicbirsey baslamiyor
+        Flux event_handling_complete = sm.sendEvent(Mono.just(msg))
                 .doOnComplete(() -> {
                     System.out.println("Event handling complete");
-                }).subscribe();
+                });
+        event_handling_complete.subscribe();//subscribe olunca event gidiyor ?
     }
 
     private StateMachine<PaymentState, PaymentEvent> build(Long paymentId){
