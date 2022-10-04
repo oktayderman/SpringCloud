@@ -6,6 +6,7 @@ import org.barons.cloud.state.machine.*;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.StateMachineEventResult;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.support.DefaultStateMachineContext;
 import org.springframework.stereotype.Service;
@@ -64,8 +65,9 @@ public class PaymentServiceImpl implements PaymentService {
         //https://www.baeldung.com/reactor-core
         //https://www.cognizantsoftvision.com/blog/getting-started-with-reactive-spring-spring-webflux/
         //synch sendevent deprecated
-        //Mono veya flux publisher, stream oluyor ama akka daki gibi subscribe olmadan materialize olmadan hicbirsey baslamiyor
-        Flux event_handling_complete = sm.sendEvent(Mono.just(msg))
+        //Mono veya flux publisher ve stream oluyor ama akka daki gibi subscribe olmadan materialize olmadan hicbirsey baslamiyor
+        //Mono 0 veya tek elemanli stream flux n elemanli
+        Flux<StateMachineEventResult> event_handling_complete = sm.sendEvent(Mono.just(msg))
                 .doOnComplete(() -> {
                     System.out.println("Event handling complete");
                 });
