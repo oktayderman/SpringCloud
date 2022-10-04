@@ -18,6 +18,7 @@
         <module>springcloud-consul-client</module>
         <module>spring-cloud-hello</module>
         <module>spring-cloud-load-balanced-client</module>
+        <module>springcloud-state-machine</module>
     </modules>
 
     <build>
@@ -179,7 +180,10 @@
     </build>
 
     <dependencies>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
