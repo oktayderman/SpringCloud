@@ -67,6 +67,10 @@ public class PaymentServiceImpl implements PaymentService {
         //synch sendevent deprecated
         //Mono veya flux publisher ve stream oluyor ama akka daki gibi subscribe olmadan materialize olmadan hicbirsey baslamiyor
         //Mono 0 veya tek elemanli stream flux n elemanli
+        //The core difference is that Reactive is a push model, whereas the Java 8 Streams are a pull model.
+        // In a reactive approach, events are pushed to the subscribers as they come in.
+        //mesela jdbcResultset stream mesela, stream'i listeye cevirmek istediginde çekip çekip listeye atıyorsun
+        //reactive'de ama stream'den geldikce listeye eklemis oluyorsun, sen subscribersin sadece
         Flux<StateMachineEventResult> event_handling_complete = sm.sendEvent(Mono.just(msg))
                 .doOnComplete(() -> {
                     System.out.println("Event handling complete");

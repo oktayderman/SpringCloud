@@ -37,10 +37,14 @@ public class Hello {
     void initialize() {
         baseUrl = "http://" + clientApp;
         webClient = WebClient.create(baseUrl);
+
         new Thread(() -> {
             while(!closed){
                 try{
-                   WebClient.ResponseSpec spec =  webClient.get().uri("/hello").retrieve();
+                    //creating a request
+                    WebClient.RequestHeadersSpec<?> uri = webClient.get().uri("/hello");
+                    //create response stream
+                    WebClient.ResponseSpec spec =  uri.retrieve();
                     System.out.println("responseFrom:" + baseUrl + ":" + spec.bodyToMono(String.class).block());
                 }catch (Exception e){
                     System.out.println("cannot get from:" +baseUrl + " exception:" + e.getClass().getSimpleName() + ":" + e.getMessage());
