@@ -71,6 +71,8 @@ public class PaymentServiceImpl implements PaymentService {
         // In a reactive approach, events are pushed to the subscribers as they come in.
         //mesela jdbcResultset stream mesela, stream'i listeye cevirmek istediginde çekip çekip listeye atıyorsun
         //reactive'de ama stream'den geldikce listeye eklemis oluyorsun, sen subscribersin sadece
+        //Mono.defer subscribe olunacak monunun subscribe olunan anda olusmasini istedigimizde kullanabiliriz., Diyelim ki count(*) subscribe olundugunda db'ye gider
+        //Yani subscribe olacagimiz datanin aslinda tam subscribe oldugumuzda olusmasini istiyoruz.
         Flux<StateMachineEventResult> event_handling_complete = sm.sendEvent(Mono.just(msg))
                 .doOnComplete(() -> {
                     System.out.println("Event handling complete");
