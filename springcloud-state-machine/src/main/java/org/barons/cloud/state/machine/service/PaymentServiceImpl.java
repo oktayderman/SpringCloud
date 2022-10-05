@@ -73,6 +73,7 @@ public class PaymentServiceImpl implements PaymentService {
         //reactive'de ama stream'den geldikce listeye eklemis oluyorsun, sen subscribersin sadece
         //Mono.defer subscribe olunacak monunun subscribe olunan anda olusmasini istedigimizde kullanabiliriz., Diyelim ki count(*) subscribe olundugunda db'ye gider
         //Yani subscribe olacagimiz datanin aslinda tam subscribe oldugumuzda olusmasini istiyoruz.
+        //web request gonderen bir mono istedigimizde de bu kullanilabilir, mono olurken request'i gonderirsek blocking olur
         Flux<StateMachineEventResult> event_handling_complete = sm.sendEvent(Mono.just(msg))
                 .doOnComplete(() -> {
                     System.out.println("Event handling complete");
