@@ -45,6 +45,9 @@ public class Hello {
                     WebClient.RequestHeadersSpec<?> uri = webClient.get().uri("/hello");
                     //create response stream
                     WebClient.ResponseSpec spec =  uri.retrieve();
+                    //retrieve sadece body ile ilgileniyorsan iyi detayli response handling icin exchange kullan
+                    //If you just want to consume some api go with retrieve().
+                    //If you want a better control over your response objects, headers and exceptions, go with exchange().
                     System.out.println("responseFrom:" + baseUrl + ":" + spec.bodyToMono(String.class).block());
                 }catch (Exception e){
                     System.out.println("cannot get from:" +baseUrl + " exception:" + e.getClass().getSimpleName() + ":" + e.getMessage());
