@@ -35,7 +35,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public StateMachine<PaymentState, PaymentEvent> preAuth(Long paymentId) {
         StateMachine<PaymentState, PaymentEvent> sm = build(paymentId);
-        sendEvent(paymentId, sm, PaymentEvent.PRE_AUTH_APPROVED);
+        sendEvent(paymentId, sm, PaymentEvent.PRE_AUTHORIZE);
 
         return sm;
     }
@@ -74,11 +74,7 @@ public class PaymentServiceImpl implements PaymentService {
         //Mono.defer subscribe olunacak monunun subscribe olunan anda olusmasini istedigimizde kullanabiliriz., Diyelim ki count(*) subscribe olundugunda db'ye gider
         //Yani subscribe olacagimiz datanin aslinda tam subscribe oldugumuzda olusmasini istiyoruz.
         //web request gonderen bir mono istedigimizde de bu kullanilabilir, mono olurken request'i gonderirsek blocking olur
-        Flux<StateMachineEventResult> event_handling_complete = sm.sendEvent(Mono.just(msg))
-                .doOnComplete(() -> {
-                    System.out.println("Event handling complete");
-                });
-        event_handling_complete.subscribe();//subscribe olunca event gidiyor ?
+     sm.sendEvent(msg);
     }
 
     private StateMachine<PaymentState, PaymentEvent> build(Long paymentId){
