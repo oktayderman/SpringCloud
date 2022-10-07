@@ -59,6 +59,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private void sendEvent(Long paymentId, StateMachine<PaymentState, PaymentEvent> sm, PaymentEvent event){
+        //state machine accept the event as standart spring message
         Message msg = MessageBuilder.withPayload(event)
                 .setHeader(PAYMENT_ID_HEADER, paymentId)
                 .build();
