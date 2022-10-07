@@ -41,6 +41,7 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<PaymentSta
 
     @Override
     public void configure(StateMachineTransitionConfigurer<PaymentState, PaymentEvent> transitions) throws Exception {
+        //do not change state when pre_authorize comes, but go to preauthAction then if it is preauth approved change state
         transitions.withExternal().source(PaymentState.NEW).target(PaymentState.NEW).event(PaymentEvent.PRE_AUTHORIZE)
                 //Actions:- The response of the State Machine to events. Can be changing variables, calling a method or changing to a different state.
                 // Here action when preAuthroize fired
