@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.*;
 import org.springframework.context.annotation.*;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -39,9 +40,9 @@ public class GreetingControllerEurokaClient implements GreetingController {
     }
 
     @Override
-    public String greeting() {
-        logger.info("test");
+    public String greeting(@RequestHeader MultiValueMap<String, String> headers) {
+        logger.info("headers:\n" + headers.toString());
         return String.format(
-                "Hello from '%s'!", eurekaClient.getApplication(appName).getName());
+                "Hello from"); //eurekaClient.getApplication(appName).getName());
     }
 }

@@ -1,5 +1,7 @@
 package org.barons.client;
 
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -9,5 +11,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 public interface GreetingController {
     @RequestMapping("/greeting")
-    String greeting();
+    String greeting(@RequestHeader MultiValueMap<String, String> headers);
 }
