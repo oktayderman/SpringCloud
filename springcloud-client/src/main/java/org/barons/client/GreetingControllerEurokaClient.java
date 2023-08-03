@@ -1,6 +1,10 @@
 package org.barons.client;
 
+import brave.Tracing;
+import brave.propagation.B3Propagation;
 import com.netflix.discovery.EurekaClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.*;
@@ -15,10 +19,17 @@ import org.springframework.web.bind.annotation.*;
 @SpringBootApplication
 @RestController
 public class GreetingControllerEurokaClient implements GreetingController {
-
+    Logger logger = LoggerFactory.getLogger(GreetingControllerEurokaClient.class);
     @Autowired
     @Lazy
     private EurekaClient eurekaClient;
+
+    @Bean
+    public Tracing braveTracing() {
+        return Tracing.newBuilder()
+                .propagationFactory(B3Propagation.newFactoryBuilder().injectFormat(B3Propagation.Format.MULTI).build())
+                .build();
+    }
 
     @Value("${spring.application.name}")
     private String appName;
@@ -29,6 +40,7 @@ public class GreetingControllerEurokaClient implements GreetingController {
 
     @Override
     public String greeting() {
+        logger.info("test");
         return String.format(
                 "Hello from '%s'!", eurekaClient.getApplication(appName).getName());
     }

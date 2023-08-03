@@ -290,7 +290,7 @@
             <AppenderRef ref="APPFileLogger" level="ERROR"/>
             <AppenderRef ref="APPErrorLogger" level="WARN"/>
         </Logger>
-        <Logger name="javax.xml.soap" level="INFO" additivity="false">
+        <Logger name="jakarta.xml.soap" level="INFO" additivity="false">
             <AppenderRef ref="APPServerLogger"/>
             <AppenderRef ref="APPFileLogger" level="ERROR"/>
             <AppenderRef ref="APPErrorLogger" level="WARN"/>

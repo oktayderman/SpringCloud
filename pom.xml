@@ -254,14 +254,14 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-parent</artifactId>
-                <version>2021.0.4</version>
+                <version>2022.0.4</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
     <properties>
-        <spring-boot.version>2.7.3</spring-boot.version>
+        <spring-boot.version>3.1.1</spring-boot.version>
         <spring.version>5.3.22</spring.version>
         <lombok.version>1.18.24</lombok.version>
         <mapstruct.version>1.5.2.Final</mapstruct.version>

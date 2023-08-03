@@ -1,16 +1,21 @@
 package org.barons;
 
 
+import brave.Tracing;
+import brave.propagation.B3Propagation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * User: Oktay CEKMEZ
@@ -19,8 +24,9 @@ import javax.servlet.http.HttpServletRequest;
  */
 @SpringBootApplication
 @RestController
-@EnableAsync
+
 public class Hello {
+    Logger logger = LoggerFactory.getLogger(Hello.class);
     private boolean closed = false;
     WebClient webClient;
 
@@ -31,7 +37,12 @@ public class Hello {
     private String clientApp;
     private String baseUrl;
 
-
+    @Bean
+    public Tracing braveTracing() {
+        return Tracing.newBuilder()
+                .propagationFactory(B3Propagation.newFactoryBuilder().injectFormat(B3Propagation.Format.MULTI).build())
+                .build();
+    }
 
     @PostConstruct
     void initialize() {
@@ -71,6 +82,7 @@ public class Hello {
 
     @RequestMapping("/hello")
     public String hello(HttpServletRequest request) {
+        logger.info("heey Iam here");
         return String.format(
                 "Hello from '%s' to clientIP:'%s', serverIP:'%s', ", appName, request.getRemoteAddr(),request.getLocalAddr());
         //serverPodIP:'%s' System.getenv("MY_POD_IP")

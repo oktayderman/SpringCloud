@@ -4,7 +4,7 @@ package org.barons.cloud.client.consul;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 /**
  * User: Oktay CEKMEZ

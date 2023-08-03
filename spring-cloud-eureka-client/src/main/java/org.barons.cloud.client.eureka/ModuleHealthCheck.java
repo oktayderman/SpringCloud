@@ -11,7 +11,7 @@ import org.springframework.boot.actuate.health.Status;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import static com.netflix.appinfo.InstanceInfo.InstanceStatus.DOWN;
 import static com.netflix.appinfo.InstanceInfo.InstanceStatus.UP;

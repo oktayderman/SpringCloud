@@ -20,8 +20,10 @@ spring:
 server:
    port: 8080
 
-
 client.app : "http://hello:8080"
 logging:
-  level:
-    reactor.netty: trace
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+#logging:
+#  level:
+#    reactor.netty: trace

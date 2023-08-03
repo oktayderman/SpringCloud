@@ -1,8 +1,12 @@
 package org.barons;
 
 
+import brave.Tracing;
+import brave.propagation.B3Propagation;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.timelimiter.TimeLimiterConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,20 +23,25 @@ import java.time.Duration;
 
 @SpringBootApplication
 @EnableFeignClients
-@Controller
+
 public class FeignClientApplication {
-    @Autowired
-    private GreetingClient greetingClient;
+
+
+
+
+
+    @Bean
+    public Tracing braveTracing() {
+        return Tracing.newBuilder()
+                .propagationFactory(B3Propagation.newFactoryBuilder().injectFormat(B3Propagation.Format.MULTI).build())
+                .build();
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(FeignClientApplication.class, args);
     }
 
-    @RequestMapping("/get-greeting")
-    public String greeting(Model model) {
-        model.addAttribute("greeting", greetingClient.greeting());
-        return "greeting-view";
-    }
+
 
     //TODO gateway ve euroka server(cluster oluyor alttaki config'leri acacagiz)  bitane mi olur ?
     //eureka.client.register-with-eureka=false
