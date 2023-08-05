@@ -1,15 +1,16 @@
 package org.barons;
 
 
-import brave.Tracing;
-import brave.propagation.B3Propagation;
+import brave.Tracer;
+import brave.handler.MutableSpan;
+import brave.handler.SpanHandler;
+import brave.propagation.TraceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -37,11 +38,18 @@ public class Hello {
     private String clientApp;
     private String baseUrl;
 
-    @Bean
-    public Tracing braveTracing() {
-        return Tracing.newBuilder()
-                .propagationFactory(B3Propagation.newFactoryBuilder().injectFormat(B3Propagation.Format.MULTI).build())
-                .build();
+    //see BraveAutoConfiguration
+    @Bean(name = {"logSpanHandler"})
+    protected SpanHandler getLogSpanHandler() {
+        return new SpanHandler() {
+            private final Logger logger = org.slf4j.LoggerFactory.getLogger(Tracer.class);
+
+            @Override
+            public boolean end(TraceContext context, MutableSpan span, Cause cause) {
+                logger.info(span.toString());
+                return true;
+            }
+        };
     }
 
     @PostConstruct
