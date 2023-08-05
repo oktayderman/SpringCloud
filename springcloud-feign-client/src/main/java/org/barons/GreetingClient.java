@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * Date: 16.06.2022
  * Time: 20:16
  */
-@FeignClient(value = "spring-cloud-eureka-client", fallback = GreetingClientFallback.class)
+@FeignClient(value = "spring-cloud-eureka-client")//fallback = GreetingClientFallback.class
 public interface GreetingClient {
     @RequestMapping("/greeting")
     String greeting();
 }
 
-
+/*
 @Component
 class GreetingClientFallback implements GreetingClient{
 
@@ -23,4 +23,4 @@ class GreetingClientFallback implements GreetingClient{
     public String greeting() {
         return "Fallbacl Erro101";
     }
-}
+}*/

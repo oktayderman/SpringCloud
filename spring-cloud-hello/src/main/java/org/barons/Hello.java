@@ -1,16 +1,22 @@
 package org.barons;
 
 
+import brave.Tracer;
+import brave.handler.MutableSpan;
+import brave.handler.SpanHandler;
+import brave.propagation.TraceContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * User: Oktay CEKMEZ
@@ -19,8 +25,9 @@ import javax.servlet.http.HttpServletRequest;
  */
 @SpringBootApplication
 @RestController
-@EnableAsync
+
 public class Hello {
+    Logger logger = LoggerFactory.getLogger(Hello.class);
     private boolean closed = false;
     WebClient webClient;
 
@@ -31,7 +38,19 @@ public class Hello {
     private String clientApp;
     private String baseUrl;
 
+    //see BraveAutoConfiguration
+    @Bean(name = {"logSpanHandler"})
+    protected SpanHandler getLogSpanHandler() {
+        return new SpanHandler() {
+            private final Logger logger = org.slf4j.LoggerFactory.getLogger(Tracer.class);
 
+            @Override
+            public boolean end(TraceContext context, MutableSpan span, Cause cause) {
+                logger.info(span.toString());
+                return true;
+            }
+        };
+    }
 
     @PostConstruct
     void initialize() {
@@ -71,6 +90,7 @@ public class Hello {
 
     @RequestMapping("/hello")
     public String hello(HttpServletRequest request) {
+        logger.info("heey Iam here");
         return String.format(
                 "Hello from '%s' to clientIP:'%s', serverIP:'%s', ", appName, request.getRemoteAddr(),request.getLocalAddr());
         //serverPodIP:'%s' System.getenv("MY_POD_IP")
