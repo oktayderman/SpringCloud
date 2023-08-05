@@ -21,18 +21,10 @@ import java.time.Duration;
 @EnableFeignClients
 @Controller
 public class FeignClientApplication {
-    @Autowired
-    private GreetingClient greetingClient;
-
     public static void main(String[] args) {
         SpringApplication.run(FeignClientApplication.class, args);
     }
 
-    @RequestMapping("/get-greeting")
-    public String greeting(Model model) {
-        model.addAttribute("greeting", greetingClient.greeting());
-        return "greeting-view";
-    }
 
     //TODO gateway ve euroka server(cluster oluyor alttaki config'leri acacagiz)  bitane mi olur ?
     //eureka.client.register-with-eureka=false

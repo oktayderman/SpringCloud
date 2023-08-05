@@ -20,9 +20,9 @@ management:
 
 
 
-    server:
-      port: 8383
+server:
+  port: 8383
 
-      logging:
-        level:
-          root: info
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
