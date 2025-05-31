@@ -6,10 +6,12 @@ spring:
   cloud:
     consul:
       discovery:
-        heartbeat:
-          ttl: "30"
-          enabled: true
-          reregister-service-on-failure: true
+        register: true
+      #heartbeat:
+        #  ttl: "30"
+        #  enabled: true
+        #  reregister-service-on-failure: true
+        enabled: true
   config:
     import: "optional:consul:"
 

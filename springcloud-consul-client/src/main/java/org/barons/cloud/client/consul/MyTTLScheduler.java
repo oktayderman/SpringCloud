@@ -34,6 +34,7 @@ public class MyTTLScheduler extends TtlScheduler {
     /**
      * Bu sınıfı herhalde custom olarak health check'i biz gönderelim consul bize gelmesi, biz düşer düşmez de hemen fail atabilelim diye yapmışız
      *  ConsulClient.agentCheckFail(this.checkId) özellikle şöyle düşer düşmez atabiliriz
+     *  Bizim ocs routing'de oyle ya
      */
    static Logger log = LoggerFactory.getLogger(MyTTLScheduler.class);
     private final TaskScheduler scheduler = new ConcurrentTaskScheduler(Executors.newSingleThreadScheduledExecutor());
