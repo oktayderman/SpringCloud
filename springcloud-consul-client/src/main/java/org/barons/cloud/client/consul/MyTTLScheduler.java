@@ -31,6 +31,10 @@ import static org.springframework.boot.actuate.health.Status.UP;
 public class MyTTLScheduler extends TtlScheduler {
     //https://chatgpt.com/c/6839fda5-ee8c-8012-bfb0-fc461800c0bd
     //https://github.com/spring-cloud/spring-cloud-consul/issues/676
+    /**
+     * Bu sınıfı herhalde custom olarak health check'i biz gönderelim consul bize gelmesi, biz düşer düşmez de hemen fail atabilelim diye yapmışız
+     *  ConsulClient.agentCheckFail(this.checkId) özellikle şöyle düşer düşmez atabiliriz
+     */
    static Logger log = LoggerFactory.getLogger(MyTTLScheduler.class);
     private final TaskScheduler scheduler = new ConcurrentTaskScheduler(Executors.newSingleThreadScheduledExecutor());
     private final Map<String, ScheduledFuture> serviceHeartbeats = new ConcurrentHashMap<>();
@@ -97,7 +101,7 @@ public class MyTTLScheduler extends TtlScheduler {
                     CompositeHealth healthComponent = (CompositeHealth) this.ttlScheduler.healthEndpoint.health();
                     if(healthComponent.getStatus() == UP) {
                         this.ttlScheduler.client.agentCheckPass(this.checkId);
-                    }else{
+                    }else{//TODO bunu tam shutdown aninda yaparak hemen bildirim yapabiliriz.
                         this.ttlScheduler.client.agentCheckFail(this.checkId);
                     }
                 }
