@@ -12,6 +12,7 @@ spring:
         #  enabled: true
         #  reregister-service-on-failure: true
         enabled: true
+        deregister: true #automatic deregistering on shutdown. See ConsulServiceRegistry.deregister
   config:
     import: "optional:consul:"
 
