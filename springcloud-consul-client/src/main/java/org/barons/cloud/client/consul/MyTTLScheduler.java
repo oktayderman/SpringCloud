@@ -5,6 +5,7 @@ import com.ecwid.consul.v1.OperationException;
 import com.ecwid.consul.v1.agent.model.NewService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.CompositeHealth;
 import org.springframework.boot.actuate.health.HealthEndpoint;
@@ -13,6 +14,7 @@ import org.springframework.cloud.consul.discovery.ConsulDiscoveryProperties;
 import org.springframework.cloud.consul.discovery.HeartbeatProperties;
 import org.springframework.cloud.consul.discovery.ReregistrationPredicate;
 import org.springframework.cloud.consul.discovery.TtlScheduler;
+import org.springframework.cloud.consul.serviceregistry.ApplicationStatusProvider;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.stereotype.Component;
@@ -27,6 +29,7 @@ import static org.springframework.boot.actuate.health.Status.UP;
 @Component
 @ConditionalOnProperty("spring.cloud.consul.discovery.heartbeat.enabled")
 public class MyTTLScheduler extends TtlScheduler {
+    //https://chatgpt.com/c/6839fda5-ee8c-8012-bfb0-fc461800c0bd
     //https://github.com/spring-cloud/spring-cloud-consul/issues/676
    static Logger log = LoggerFactory.getLogger(MyTTLScheduler.class);
     private final TaskScheduler scheduler = new ConcurrentTaskScheduler(Executors.newSingleThreadScheduledExecutor());
@@ -39,8 +42,8 @@ public class MyTTLScheduler extends TtlScheduler {
     private final Map<String, NewService> registeredServices = new ConcurrentHashMap<>();
     private final ConsulDiscoveryProperties discoveryProperties;
 
-    public MyTTLScheduler(HeartbeatProperties heartbeatProperties, ConsulDiscoveryProperties discoveryProperties, ConsulClient client, @Autowired ReregistrationPredicate reregistrationPredicate) {
-        super(heartbeatProperties, discoveryProperties, client, reregistrationPredicate);
+    public MyTTLScheduler(HeartbeatProperties heartbeatProperties, ConsulDiscoveryProperties discoveryProperties, ConsulClient client, @Autowired ReregistrationPredicate reregistrationPredicate, ObjectProvider<ApplicationStatusProvider> applicationStatusProviderFactory) {
+        super(heartbeatProperties, discoveryProperties, client, reregistrationPredicate,applicationStatusProviderFactory);
         this.client = client;
         this.heartbeatProperties = heartbeatProperties;
         this.reregistrationPredicate = reregistrationPredicate;
